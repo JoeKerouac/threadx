@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>threadx</artifactId>
+    <version>1.0.000</version>
+    <name>threadx</name>
+    <packaging>jar</packaging>
+    <description>多线程扩展</description>
+    <url>https://github.com/JoeKerouac/threadx</url>
+
+    <parent>
+        <groupId>com.github.JoeKerouac</groupId>
+        <artifactId>java-parent</artifactId>
+        <version>1.1.0</version>
+    </parent>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git@github.com:JoeKerouac/threadx.git</connection>
+        <developerConnection>scm:git@github.com:JoeKerouac/threadx.git</developerConnection>
+        <url>https://github.com/JoeKerouac/threadx</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>JoeKerouac</name>
+            <email>1213812243@qq.com</email>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.JoeKerouac</groupId>
+            <artifactId>utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${encode}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
