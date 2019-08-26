@@ -25,11 +25,23 @@ public interface InterceptableThreadPoolExecutor extends ExecutorService {
     void addFirstTaskInterceptor(TaskInterceptor interceptor);
 
     /**
-     * 移除指定拦截器
+     * 移除全部指定拦截器
      * @param interceptor 要移除的拦截器
-     * @return 如果要移除的拦截器存在，那么移除并返回，否则返回null
+     * @return 移除成功返回true，不存在时返回false
      */
-    TaskInterceptor removeRunnableInterceptor(TaskInterceptor interceptor);
+    boolean removeAllRunnableInterceptor(TaskInterceptor interceptor);
+
+    /**
+     * 移除第一个匹配到的指定拦截器
+     * @param interceptor 要移除的拦截器
+     * @return 移除成功返回true，不存在时返回false
+     */
+    boolean removeFirstRunnableInterceptor(TaskInterceptor interceptor);
+
+    /**
+     * 移除全部拦截器
+     */
+    void removeAllRunnableInterceptor();
 
     /**
      * 获取当前线程池任务所有拦截器

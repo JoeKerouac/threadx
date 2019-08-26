@@ -49,12 +49,22 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
     }
 
     @Override
-    public TaskInterceptor removeRunnableInterceptor(TaskInterceptor interceptor) {
-        if (interceptors.remove(interceptor)) {
-            return interceptor;
-        } else {
-            return null;
+    public boolean removeAllRunnableInterceptor(TaskInterceptor interceptor) {
+        boolean flag = false;
+        while (interceptors.remove(interceptor)) {
+            flag = true;
         }
+        return flag;
+    }
+
+    @Override
+    public boolean removeFirstRunnableInterceptor(TaskInterceptor interceptor) {
+        return interceptors.remove(interceptor);
+    }
+
+    @Override
+    public void removeAllRunnableInterceptor() {
+        interceptors.clear();
     }
 
     @Override

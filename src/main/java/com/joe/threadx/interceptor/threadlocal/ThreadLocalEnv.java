@@ -3,13 +3,15 @@ package com.joe.threadx.interceptor.threadlocal;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.joe.threadx.exception.ThreadLocalEnvException;
 import com.joe.utils.common.Assert;
 import com.joe.utils.common.string.StringUtils;
 
 /**
  * 线程上下文环境，ThreadLocal包装
- * 
+ *
+ * @see HierarchicalThreadLocalRunnable
+ * @see HierarchicalThreadLocalCallable
+ *
  * @author JoeKerouac
  * @version 2019年08月22日 09:36
  */
@@ -19,17 +21,6 @@ public class ThreadLocalEnv {
      * 实际容器
      */
     private static final ThreadLocal<Map<String, Object>> THREAD_LOCAL = new ThreadLocal<>();
-
-    /**
-     * 初始化当前线程环境，重复调用幂等返回
-     */
-    public static void init() {
-        Map<String, Object> map = THREAD_LOCAL.get();
-        if (map == null) {
-            map = new HashMap<>();
-            THREAD_LOCAL.set(map);
-        }
-    }
 
     /**
      * 销毁清空当前线程上下文，重复调用幂等返回
@@ -49,10 +40,10 @@ public class ThreadLocalEnv {
     /**
      * 将配置全部放入当前线程环境配置
      * @param env 配置
-     * @throws ThreadLocalEnvException 当前线程上下文不存在或者被销毁时抛出异常
      */
-    public static void putAll(Map<String, Object> env) throws ThreadLocalEnvException {
-        getEnv(true).putAll(env);
+    public static void putAll(Map<String, Object> env) {
+        Assert.notNull(env, "env must not be null");
+        getAndInit(true).putAll(env);
     }
 
     /**
@@ -61,13 +52,11 @@ public class ThreadLocalEnv {
      * @param value 配置的value
      * @param <T> 配置value的类型
      * @return 当前key对应的value，如果当前没有值则为null
-     * @throws ThreadLocalEnvException 当前线程上下文不存在或者被销毁时抛出异常
      */
     @SuppressWarnings("unchecked")
-    public static <T> T put(String key, T value) throws ThreadLocalEnvException {
+    public static <T> T put(String key, T value) {
         Assert.isTrue(StringUtils.isNotEmpty(key), "key must not be empty");
-        Map<String, Object> map = getEnv(true);
-        return (T) map.put(key, value);
+        return (T) getAndInit(true).put(key, value);
     }
 
     /**
@@ -79,21 +68,21 @@ public class ThreadLocalEnv {
     @SuppressWarnings("unchecked")
     public static <T> T get(String key) {
         Assert.isTrue(StringUtils.isNotEmpty(key), "key must not be empty");
-        Map<String, Object> map = getEnv(false);
+        Map<String, Object> map = getAndInit(false);
         return map == null ? null : (T) map.get(key);
     }
 
     /**
-     * 获取当前线程上下文
-     * 
-     * @param throwIfNull 如果当前尚未初始化是否抛出异常，true表示抛出异常
-     * @return 当前线程上下文，不存在时抛出异常
-     * @throws ThreadLocalEnvException 当前线程上下文不存在或者被销毁时并且throwIfNull为true抛出异常
+     * 获取当前线程环境，重复调用幂等返回，如果当前线程上下文未初始化则根据入参选择是否初始化
+     *
+     * @param init 是否初始化，true表示如果不存在那么初始化
+     * @return 初始化后的map
      */
-    private static Map<String, Object> getEnv(boolean throwIfNull) throws ThreadLocalEnvException {
+    private static Map<String, Object> getAndInit(boolean init) {
         Map<String, Object> map = THREAD_LOCAL.get();
-        if (map == null && throwIfNull) {
-            throw new ThreadLocalEnvException("当前线程环境尚未初始化或者已经被销毁，请先调用init");
+        if (init && map == null) {
+            map = new HashMap<>();
+            THREAD_LOCAL.set(map);
         }
         return map;
     }

@@ -18,7 +18,6 @@ public abstract class HierarchicalThreadLocalTask {
 
     protected void initThreadLocalEnv() {
         if (threadLocalEnv != null) {
-            ThreadLocalEnv.init();
             ThreadLocalEnv.putAll(threadLocalEnv);
         }
     }
