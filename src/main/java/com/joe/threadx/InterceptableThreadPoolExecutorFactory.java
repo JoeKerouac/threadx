@@ -15,29 +15,48 @@ public class InterceptableThreadPoolExecutorFactory {
     /**
      * 构建指定类型的线程池
      * @param type 线程池类型
+     * @param supportThreadLocalExt 是否支持{@link ThreadLocalTaskInterceptor}扩展，true表示支持
      * @return 线程池
      */
-    public static InterceptableThreadPoolExecutor build(PoolType type) {
+    public static InterceptableThreadPoolExecutor build(PoolType type,
+                                                        boolean supportThreadLocalExt) {
+        ThreadPoolConfig config;
         switch (type) {
             case IO:
-                return build(ThreadxConst.IO_THREAD_POO_CONFIG_SUPPLIER.get());
+                config = ThreadxConst.IO_THREAD_POO_CONFIG_SUPPLIER.get();
+                break;
             case Calc:
-                return build(ThreadxConst.CALC_THREAD_POO_CONFIG_SUPPLIER.get());
+                config = ThreadxConst.CALC_THREAD_POO_CONFIG_SUPPLIER.get();
+                break;
             default:
                 throw new IllegalArgumentException(
                     String.format("内部异常，未知线程池类型[%s]", type.toString()));
         }
+        return build(config, supportThreadLocalExt);
+    }
+
+    /**
+     * 构建指定类型的线程池，支持ThreadLocal插件，插件详见{@link ThreadLocalTaskInterceptor}
+     * @param type 线程池类型
+     * @return 线程池
+     */
+    public static InterceptableThreadPoolExecutor build(PoolType type) {
+        return build(type, true);
     }
 
     /**
      * 构建线程池
      * @param config 线程池配置
+     * @param supportThreadLocalExt 是否支持{@link ThreadLocalTaskInterceptor}扩展
      * @return 线程池
      */
-    public static InterceptableThreadPoolExecutor build(ThreadPoolConfig config) {
+    public static InterceptableThreadPoolExecutor build(ThreadPoolConfig config,
+                                                        boolean supportThreadLocalExt) {
         Assert.notNull(config, "config must not be null");
         InterceptableThreadPoolExecutor executor = new InterceptableThreadPoolExecutorImpl(config);
-        executor.addFirstTaskInterceptor(new ThreadLocalTaskInterceptor());
+        if (supportThreadLocalExt) {
+            executor.addFirstTaskInterceptor(new ThreadLocalTaskInterceptor());
+        }
         return executor;
     }
 

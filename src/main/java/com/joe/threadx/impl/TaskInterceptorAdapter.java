@@ -41,9 +41,9 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
     }
 
     /**
-     * 执行函数
+     * 执行函数，将任务进行转换
      * @param task 任务
-     * @param function 转换函数
+     * @param function 转换函数，提供TaskInterceptor和任务，将任务转换为新的任务
      * @return 结果
      */
     private Object invoke(Object task, BiFunction<TaskInterceptor, Object, Object> function) {

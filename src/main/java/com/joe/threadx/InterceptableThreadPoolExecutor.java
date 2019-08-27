@@ -3,7 +3,7 @@ package com.joe.threadx;
 import java.util.concurrent.ExecutorService;
 
 /**
- * 可对线程任务拦截的线程池
+ * 可对线程任务拦截的线程池，可以通过这些拦截点扩展各种插件，例如实现线程上下文自动copy的{@link com.joe.threadx.interceptor.threadlocal.ThreadLocalTaskInterceptor ThreadLocalTaskInterceptor}插件
  *
  * @author JoeKerouac
  * @version 2019年08月20日 14:02

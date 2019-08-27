@@ -4,13 +4,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.joe.threadx.interceptor.threadlocal.ThreadLocalEnv;
-import com.joe.utils.common.string.StringUtils;
 
 /**
  * 线程池测试
@@ -18,34 +14,7 @@ import com.joe.utils.common.string.StringUtils;
  * @author JoeKerouac
  * @version 2019年08月21日 21:10
  */
-public class InterceptableThreadPoolExecutorTest {
-
-    private static final String KEY   = "test-key";
-
-    private static final String VALUE = "test-value";
-
-    /**
-     * 测试内置的ThreadLocal插件
-     */
-    @Test
-    public void doTest() {
-        run(executor -> {
-            try {
-                ThreadLocalEnv.put(KEY, VALUE);
-
-                AtomicBoolean flag = new AtomicBoolean(false);
-                CountDownLatch latch = new CountDownLatch(1);
-                executor.execute(() -> {
-                    flag.set(StringUtils.equals(VALUE, ThreadLocalEnv.get(KEY)));
-                    latch.countDown();
-                });
-                Assert.assertTrue(latch.await(1, TimeUnit.SECONDS));
-                Assert.assertTrue(flag.get());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
+public class InterceptableThreadPoolExecutorTest extends BaseTest {
 
     @Test
     public void doTestAddLastTaskInterceptor() {
@@ -206,23 +175,4 @@ public class InterceptableThreadPoolExecutorTest {
         });
     }
 
-    private void execEmpty(InterceptableThreadPoolExecutor executor) {
-        // 执行一个空任务触发拦截器
-        executor.execute(() -> {
-
-        });
-    }
-
-    /**
-     * 执行指定操作，每次执行都会为该操作提供一个InterceptableThreadPoolExecutor
-     * @param consumer 待执行的操作
-     */
-    private void run(Consumer<InterceptableThreadPoolExecutor> consumer) {
-        InterceptableThreadPoolExecutor executor = InterceptableThreadPoolExecutorFactory
-            .build(InterceptableThreadPoolExecutorFactory.PoolType.Calc);
-        consumer.accept(executor);
-        if (!executor.isShutdown()) {
-            executor.shutdown();
-        }
-    }
 }

@@ -10,12 +10,13 @@ import java.util.concurrent.Callable;
  * @author JoeKerouac
  * @version 2019年08月22日 11:16
  */
-public class HierarchicalThreadLocalCallable<V> extends HierarchicalThreadLocalTask
-                                            implements Callable<V> {
+class HierarchicalThreadLocalCallable<V> extends HierarchicalThreadLocalTask
+                                            implements ThreadLocalTask, Callable<V> {
 
     private Callable<V> task;
 
-    public HierarchicalThreadLocalCallable(Callable<V> task) {
+    HierarchicalThreadLocalCallable(Callable<V> task) {
+        super(task);
         this.task = task;
     }
 
