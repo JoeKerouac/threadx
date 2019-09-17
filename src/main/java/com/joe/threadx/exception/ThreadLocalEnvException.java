@@ -6,7 +6,7 @@ package com.joe.threadx.exception;
  * @author JoeKerouac
  * @version 2019年08月22日 10:16
  */
-public class ThreadLocalEnvException extends ThreadxException{
+public class ThreadLocalEnvException extends ThreadxException {
 
     public ThreadLocalEnvException(String message) {
         super(message);

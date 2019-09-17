@@ -1,12 +1,14 @@
 package com.joe.threadx.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
 import com.joe.threadx.TaskInterceptor;
 import com.joe.threadx.exception.UncaughtException;
-import com.joe.utils.common.Assert;
 
 /**
  * RunnableInterceptor适配器
@@ -17,17 +19,24 @@ import com.joe.utils.common.Assert;
 public class TaskInterceptorAdapter implements TaskInterceptor {
 
     /**
-     * 实际的RunnableInterceptor队列
+     * 前置执行队列
      */
-    private List<TaskInterceptor> interceptors;
+    private List<TaskInterceptor> beforeInterceptors;
+
+    /**
+     * 后置执行队列
+     */
+    private List<TaskInterceptor> afterInterceptors;
 
     /**
      * 构造器
      * @param interceptors 实现会对该队列进行遍历，请保证该List是线程安全的或者保证不会并发
      */
     public TaskInterceptorAdapter(List<TaskInterceptor> interceptors) {
-        Assert.notNull(interceptors, "interceptors must not be null");
-        this.interceptors = interceptors;
+        Objects.requireNonNull(interceptors, "beforeInterceptors must not be null");
+        this.beforeInterceptors = interceptors;
+        this.afterInterceptors = new ArrayList<>(interceptors);
+        Collections.reverse(afterInterceptors);
     }
 
     @Override
@@ -49,7 +58,7 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
     private Object invoke(Object task, BiFunction<TaskInterceptor, Object, Object> function) {
         AtomicReference<Object> taskRef = new AtomicReference<>();
         taskRef.set(task);
-        interceptors.forEach(interceptor -> {
+        beforeInterceptors.forEach(interceptor -> {
             Object result = function.apply(interceptor, taskRef.get());
             interceptor.check(task, result);
             taskRef.set(result);
@@ -59,14 +68,14 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
 
     @Override
     public void after(Object task, Object result) {
-        interceptors.forEach(interceptor -> interceptor.after(task, result));
+        afterInterceptors.forEach(interceptor -> interceptor.after(task, result));
     }
 
     @Override
     public RuntimeException exception(Object task, Throwable e) {
         AtomicReference<Throwable> reference = new AtomicReference<>();
         reference.set(e);
-        interceptors.forEach(interceptor -> {
+        afterInterceptors.forEach(interceptor -> {
             if (reference.get() != null) {
                 reference.set(interceptor.exception(task, reference.get()));
             }
@@ -77,5 +86,10 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
         } else {
             return new UncaughtException(result);
         }
+    }
+
+    @Override
+    public void finalTask(Object task) {
+        afterInterceptors.forEach(interceptor -> interceptor.finalTask(task));
     }
 }

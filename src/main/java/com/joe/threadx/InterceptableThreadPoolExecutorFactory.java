@@ -1,8 +1,9 @@
 package com.joe.threadx;
 
+import java.util.Objects;
+
 import com.joe.threadx.impl.InterceptableThreadPoolExecutorImpl;
 import com.joe.threadx.interceptor.threadlocal.ThreadLocalTaskInterceptor;
-import com.joe.utils.common.Assert;
 
 /**
  * InterceptableThreadPoolExecutor工厂
@@ -52,7 +53,7 @@ public class InterceptableThreadPoolExecutorFactory {
      */
     public static InterceptableThreadPoolExecutor build(ThreadPoolConfig config,
                                                         boolean supportThreadLocalExt) {
-        Assert.notNull(config, "config must not be null");
+        Objects.requireNonNull(config, "config must not be null");
         InterceptableThreadPoolExecutor executor = new InterceptableThreadPoolExecutorImpl(config);
         if (supportThreadLocalExt) {
             executor.addFirstTaskInterceptor(new ThreadLocalTaskInterceptor());

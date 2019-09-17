@@ -2,9 +2,9 @@ package com.joe.threadx.interceptor.threadlocal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-import com.joe.utils.common.Assert;
-import com.joe.utils.common.string.StringUtils;
+import com.joe.threadx.util.ThreadxUtils;
 
 /**
  * 线程上下文环境，ThreadLocal包装
@@ -34,7 +34,7 @@ public class ThreadLocalEnv {
      * @return 当前线程上下文所有环境配置，可能为null
      */
     public static Map<String, Object> getAll() {
-        return THREAD_LOCAL.get();
+        return getAndInit();
     }
 
     /**
@@ -42,8 +42,8 @@ public class ThreadLocalEnv {
      * @param env 配置
      */
     public static void putAll(Map<String, Object> env) {
-        Assert.notNull(env, "env must not be null");
-        getAndInit(true).putAll(env);
+        Objects.requireNonNull(env, "env must not be null");
+        getAndInit().putAll(env);
     }
 
     /**
@@ -55,8 +55,8 @@ public class ThreadLocalEnv {
      */
     @SuppressWarnings("unchecked")
     public static <T> T put(String key, T value) {
-        Assert.isTrue(StringUtils.isNotEmpty(key), "key must not be empty");
-        return (T) getAndInit(true).put(key, value);
+        ThreadxUtils.assertTrue(key != null && !key.isEmpty(), "key must not be empty");
+        return (T) getAndInit().put(key, value);
     }
 
     /**
@@ -67,20 +67,19 @@ public class ThreadLocalEnv {
      */
     @SuppressWarnings("unchecked")
     public static <T> T get(String key) {
-        Assert.isTrue(StringUtils.isNotEmpty(key), "key must not be empty");
-        Map<String, Object> map = getAndInit(false);
+        ThreadxUtils.assertTrue(key != null && !key.isEmpty(), "key must not be empty");
+        Map<String, Object> map = getAndInit();
         return map == null ? null : (T) map.get(key);
     }
 
     /**
-     * 获取当前线程环境，重复调用幂等返回，如果当前线程上下文未初始化则根据入参选择是否初始化
+     * 获取当前线程环境，重复调用幂等返回，如果当前线程上下文未初始化则初始化
      *
-     * @param init 是否初始化，true表示如果不存在那么初始化
      * @return 初始化后的map
      */
-    private static Map<String, Object> getAndInit(boolean init) {
+    private static Map<String, Object> getAndInit() {
         Map<String, Object> map = THREAD_LOCAL.get();
-        if (init && map == null) {
+        if (map == null) {
             map = new HashMap<>();
             THREAD_LOCAL.set(map);
         }

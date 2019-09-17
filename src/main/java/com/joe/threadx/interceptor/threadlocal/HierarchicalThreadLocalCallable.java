@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
  * @version 2019年08月22日 11:16
  */
 class HierarchicalThreadLocalCallable<V> extends HierarchicalThreadLocalTask
-                                            implements ThreadLocalTask, Callable<V> {
+                                     implements ThreadLocalTask, Callable<V> {
 
     private Callable<V> task;
 
@@ -22,11 +22,6 @@ class HierarchicalThreadLocalCallable<V> extends HierarchicalThreadLocalTask
 
     @Override
     public V call() throws Exception {
-        initThreadLocalEnv();
-        try {
-            return task.call();
-        } finally {
-            destroyThreadLocalEnv();
-        }
+        return task.call();
     }
 }

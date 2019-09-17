@@ -1,6 +1,8 @@
 package com.joe.threadx;
 
-import com.joe.utils.common.Assert;
+import java.util.Objects;
+
+import com.joe.threadx.util.ThreadxUtils;
 
 /**
  * 可拦截的线程任务
@@ -33,8 +35,8 @@ public class InterceptableRunnable implements Runnable {
      * @param interceptor 拦截器，不能为空
      */
     public InterceptableRunnable(Runnable task, TaskInterceptor interceptor, Object result) {
-        Assert.notNull(task, "task must not be null");
-        Assert.notNull(interceptor, "interceptor must not be null");
+        Objects.requireNonNull(task, "task must not be null");
+        Objects.requireNonNull(interceptor, "interceptor must not be null");
         this.task = task;
         this.interceptor = interceptor;
         this.result = result;
@@ -49,10 +51,7 @@ public class InterceptableRunnable implements Runnable {
             ((Runnable) realTask).run();
             interceptor.after(realTask, result);
         } catch (Throwable e) {
-            RuntimeException result = interceptor.exception(realTask == null ? task : realTask, e);
-            if (result != null) {
-                throw result;
-            }
+            ThreadxUtils.processException(e, interceptor, realTask == null ? task : realTask);
         }
     }
 }

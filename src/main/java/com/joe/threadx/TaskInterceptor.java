@@ -1,10 +1,11 @@
 package com.joe.threadx;
 
+import java.text.MessageFormat;
+
 import com.joe.threadx.exception.ThreadxException;
-import com.joe.utils.common.string.StringFormater;
 
 /**
- * 线程任务拦截
+ * 线程任务拦截，执行顺序：如果beforeAccept、before最先执行那么after、exception、finalTask将最后执行
  * 
  * @author JoeKerouac
  * @version 2019年08月21日 17:43
@@ -56,6 +57,14 @@ public interface TaskInterceptor {
     }
 
     /**
+     * 无论是否异常最终都会调用该方法
+     * @param task 执行的任务
+     */
+    default void finalTask(Object task) {
+
+    }
+
+    /**
      * 对{@link #beforeAccept(Object)}和{@link #before(Object)}方法返回值类型进行校验，不建议重写
      * @param task {@link #beforeAccept(Object)}或{@link #before(Object)}方法入参
      * @param result {@link #beforeAccept(Object)}或{@link #before(Object)}方法结果
@@ -69,7 +78,7 @@ public interface TaskInterceptor {
         if (result.getClass() != task.getClass()
             && task.getClass().isAssignableFrom(result.getClass())) {
             throw new ThreadxException(
-                StringFormater.simpleFormat("类型检查异常，入参类型：{0}，返回类型：{1}，当前TaskInterceptor为：{2}",
+                MessageFormat.format("类型检查异常，入参类型：{0}，返回类型：{1}，当前TaskInterceptor为：{2}",
                     task.getClass(), result.getClass(), this));
         }
     }

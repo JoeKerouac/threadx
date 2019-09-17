@@ -1,8 +1,7 @@
 package com.joe.threadx.interceptor.threadlocal;
 
 import java.util.Map;
-
-import com.joe.utils.common.Assert;
+import java.util.Objects;
 
 /**
  * 可从父线程继承环境上下文的任务
@@ -20,7 +19,7 @@ abstract class HierarchicalThreadLocalTask implements ThreadLocalTask {
     private Object              task;
 
     HierarchicalThreadLocalTask(Object task) {
-        Assert.notNull(task, "执行任务不能为空");
+        Objects.requireNonNull(task, "执行任务不能为空");
         this.task = task;
         threadLocalEnv = ThreadLocalEnv.getAll();
     }

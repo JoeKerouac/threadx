@@ -23,7 +23,7 @@ public abstract class BaseTest {
      */
     protected void run(Consumer<InterceptableThreadPoolExecutor> consumer) {
         InterceptableThreadPoolExecutor executor = InterceptableThreadPoolExecutorFactory
-                .build(InterceptableThreadPoolExecutorFactory.PoolType.Calc);
+            .build(InterceptableThreadPoolExecutorFactory.PoolType.Calc);
         consumer.accept(executor);
         if (!executor.isShutdown()) {
             executor.shutdown();

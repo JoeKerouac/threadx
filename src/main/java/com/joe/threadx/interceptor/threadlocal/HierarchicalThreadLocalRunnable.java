@@ -9,7 +9,7 @@ package com.joe.threadx.interceptor.threadlocal;
  * @version 2019年08月22日 11:14
  */
 class HierarchicalThreadLocalRunnable extends HierarchicalThreadLocalTask
-                                             implements ThreadLocalTask, Runnable {
+                                      implements ThreadLocalTask, Runnable {
 
     private Runnable task;
 
@@ -20,12 +20,6 @@ class HierarchicalThreadLocalRunnable extends HierarchicalThreadLocalTask
 
     @Override
     public void run() {
-        initThreadLocalEnv();
-        try {
-            task.run();
-        } finally {
-            destroyThreadLocalEnv();
-        }
+        task.run();
     }
-
 }

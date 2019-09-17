@@ -1,8 +1,9 @@
 package com.joe.threadx;
 
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import com.joe.utils.common.Assert;
+import com.joe.threadx.util.ThreadxUtils;
 
 /**
  * 可拦截的线程任务
@@ -29,8 +30,8 @@ public class InterceptableCallable<T> implements Callable<T> {
      * @param interceptor 拦截器，不能为空
      */
     public InterceptableCallable(Callable<T> task, TaskInterceptor interceptor) {
-        Assert.notNull(task, "task must not be null");
-        Assert.notNull(interceptor, "interceptor must not be null");
+        Objects.requireNonNull(task, "task must not be null");
+        Objects.requireNonNull(interceptor, "interceptor must not be null");
         this.task = task;
         this.interceptor = interceptor;
     }
@@ -46,10 +47,7 @@ public class InterceptableCallable<T> implements Callable<T> {
             interceptor.after(realTask, result);
             return result;
         } catch (Throwable e) {
-            RuntimeException result = interceptor.exception(realTask == null ? realTask : task, e);
-            if (result != null) {
-                throw result;
-            }
+            ThreadxUtils.processException(e, interceptor, realTask == null ? task : realTask);
         }
         return null;
     }

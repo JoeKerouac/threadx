@@ -13,11 +13,6 @@ import java.util.function.Supplier;
 public class ThreadxConst {
 
     /**
-     * 默认被拒绝任务的处理器
-     */
-    public static final RejectedExecutionHandler   DEFAULT_HANDLER = new ThreadPoolExecutor.AbortPolicy();
-
-    /**
      * IO线程池配置函数获取
      */
     public static final Supplier<ThreadPoolConfig> IO_THREAD_POO_CONFIG_SUPPLIER;
@@ -26,6 +21,11 @@ public class ThreadxConst {
      * CPU密集型任务线程池配置
      */
     public static final Supplier<ThreadPoolConfig> CALC_THREAD_POO_CONFIG_SUPPLIER;
+
+    /**
+     * 默认任务队列堆积长度
+     */
+    private static final int                       DEFAULT_QUEUE_SIZE = 100000;
 
     static {
         IO_THREAD_POO_CONFIG_SUPPLIER = () -> {
@@ -43,9 +43,9 @@ public class ThreadxConst {
             int maximumPoolSize = Runtime.getRuntime().availableProcessors() * 20;
             long keepAliveTime = 3;
             TimeUnit unit = TimeUnit.MINUTES;
-            BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(Integer.MAX_VALUE);
+            BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(DEFAULT_QUEUE_SIZE);
             return new ThreadPoolConfig(corePoolSize, maximumPoolSize, keepAliveTime, unit,
-                workQueue, factory, DEFAULT_HANDLER);
+                workQueue, factory, new ThreadPoolExecutor.AbortPolicy());
         };
 
         CALC_THREAD_POO_CONFIG_SUPPLIER = () -> {
@@ -64,10 +64,9 @@ public class ThreadxConst {
             corePoolSize = maximumPoolSize = Runtime.getRuntime().availableProcessors() + 1;
             long keepAliveTime = 3;
             TimeUnit unit = TimeUnit.MINUTES;
-            // 最多1W条，CPU密集型任务不应该堆积太多
-            BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(10000);
+            BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(DEFAULT_QUEUE_SIZE);
             return new ThreadPoolConfig(corePoolSize, maximumPoolSize, keepAliveTime, unit,
-                workQueue, factory, DEFAULT_HANDLER);
+                workQueue, factory, new ThreadPoolExecutor.AbortPolicy());
         };
     }
 }
