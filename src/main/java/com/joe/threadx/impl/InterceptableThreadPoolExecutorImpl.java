@@ -184,13 +184,8 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
      * @param tasks 任务列表
      * @return 要执行的任务列表
      */
-    @SuppressWarnings("unchecked")
     private <T> Collection<Callable<T>> beforeAccept(Collection<? extends Callable<T>> tasks) {
-        return tasks.stream().map(task -> {
-            Object result = interceptorAdapter.beforeAccept(task);
-            interceptorAdapter.check(task, result);
-            return (Callable<T>) result;
-        }).collect(Collectors.toList());
+        return tasks.stream().map(this::beforeAccept).collect(Collectors.toList());
     }
 
     /**
