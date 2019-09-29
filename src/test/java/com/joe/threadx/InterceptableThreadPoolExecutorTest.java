@@ -30,7 +30,7 @@ public class InterceptableThreadPoolExecutorTest extends BaseTest {
 
                 execEmpty(executor);
 
-                Assert.assertTrue(latch.await(5, TimeUnit.SECONDS));
+                Assert.assertTrue(latch.await(1, TimeUnit.SECONDS));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -51,7 +51,7 @@ public class InterceptableThreadPoolExecutorTest extends BaseTest {
 
                 execEmpty(executor);
 
-                Assert.assertTrue(latch.await(5, TimeUnit.SECONDS));
+                Assert.assertTrue(latch.await(1, TimeUnit.SECONDS));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -70,15 +70,7 @@ public class InterceptableThreadPoolExecutorTest extends BaseTest {
                 AtomicBoolean flag = new AtomicBoolean(true);
                 AtomicInteger counter = new AtomicInteger();
 
-                // 顺序添加，按照添加顺序执行
-                executor.addLastTaskInterceptor(new TaskInterceptor() {
-                    @Override
-                    public void after(Object task, Object result) {
-                        flag.set(flag.get() && counter.getAndIncrement() == 0);
-                        latch.countDown();
-                    }
-                });
-
+                // 顺序添加，按照添加顺序执行，after是按照顺序添加的逆序执行
                 executor.addLastTaskInterceptor(new TaskInterceptor() {
                     @Override
                     public void after(Object task, Object result) {
@@ -87,9 +79,17 @@ public class InterceptableThreadPoolExecutorTest extends BaseTest {
                     }
                 });
 
+                executor.addLastTaskInterceptor(new TaskInterceptor() {
+                    @Override
+                    public void after(Object task, Object result) {
+                        flag.set(flag.get() && counter.getAndIncrement() == 0);
+                        latch.countDown();
+                    }
+                });
+
                 execEmpty(executor);
 
-                Assert.assertTrue(latch.await(5, TimeUnit.SECONDS));
+                Assert.assertTrue(latch.await(1, TimeUnit.SECONDS));
                 Assert.assertTrue(flag.get());
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -124,7 +124,7 @@ public class InterceptableThreadPoolExecutorTest extends BaseTest {
                 executor.shutdown();
 
                 // 首先要确保线程任务执行完毕
-                Assert.assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS));
+                Assert.assertTrue(executor.awaitTermination(1, TimeUnit.SECONDS));
                 // 如果没有被移除这里将会是false
                 Assert.assertTrue(flag.get());
             } catch (Exception e) {
@@ -145,7 +145,7 @@ public class InterceptableThreadPoolExecutorTest extends BaseTest {
                 executor.shutdown();
 
                 // 首先要确保线程任务执行完毕
-                Assert.assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS));
+                Assert.assertTrue(executor.awaitTermination(1, TimeUnit.SECONDS));
                 // 如果没有被移除这里将会是false
                 Assert.assertTrue(flag.get());
             } catch (Exception e) {
@@ -166,7 +166,7 @@ public class InterceptableThreadPoolExecutorTest extends BaseTest {
                 executor.shutdown();
 
                 // 首先要确保线程任务执行完毕
-                Assert.assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS));
+                Assert.assertTrue(executor.awaitTermination(1, TimeUnit.SECONDS));
                 // 如果没有被移除这里将会是false
                 Assert.assertTrue(flag.get());
             } catch (Exception e) {
