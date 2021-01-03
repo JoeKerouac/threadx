@@ -18,7 +18,7 @@ import com.joe.threadx.BaseTest;
  */
 public class MDCTaskInterceptorTest extends BaseTest {
 
-    private static final String KEY   = "test-key";
+    private static final String KEY = "test-key";
 
     private static final String VALUE = "test-value";
 

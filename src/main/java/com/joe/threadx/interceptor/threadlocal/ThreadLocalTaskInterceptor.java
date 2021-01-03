@@ -20,9 +20,9 @@ public class ThreadLocalTaskInterceptor implements TaskInterceptor {
         if (task instanceof HierarchicalThreadLocalTask) {
             return task;
         } else if (task instanceof Runnable) {
-            return new HierarchicalThreadLocalRunnable((Runnable) task);
+            return new HierarchicalThreadLocalRunnable((Runnable)task);
         } else if (task instanceof Callable) {
-            return new HierarchicalThreadLocalCallable<>((Callable<?>) task);
+            return new HierarchicalThreadLocalCallable<>((Callable<?>)task);
         } else {
             throw new ThreadxException("未知任务类型：" + task);
         }
@@ -30,12 +30,12 @@ public class ThreadLocalTaskInterceptor implements TaskInterceptor {
 
     @Override
     public Object before(Object task) {
-        ((HierarchicalThreadLocalTask) task).initThreadLocalEnv();
+        ((HierarchicalThreadLocalTask)task).initThreadLocalEnv();
         return task;
     }
 
     @Override
     public void finalTask(Object task) {
-        ((HierarchicalThreadLocalTask) task).destroyThreadLocalEnv();
+        ((HierarchicalThreadLocalTask)task).destroyThreadLocalEnv();
     }
 }

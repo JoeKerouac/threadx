@@ -23,32 +23,32 @@ public class ThreadPoolConfig {
     /**
      * 线程池核心大小
      */
-    private int                      corePoolSize;
+    private int corePoolSize;
 
     /**
      * 线程池最大大小
      */
-    private int                      maximumPoolSize;
+    private int maximumPoolSize;
 
     /**
      * 线程存活时间
      */
-    private long                     keepAliveTime;
+    private long keepAliveTime;
 
     /**
      * 线程存活时间单位，不能为空
      */
-    private TimeUnit                 unit;
+    private TimeUnit unit;
 
     /**
      * 阻塞队列，不能为空
      */
-    private BlockingQueue<Runnable>  workQueue;
+    private BlockingQueue<Runnable> workQueue;
 
     /**
      * 线程工厂，不能为空
      */
-    private ThreadFactory            threadFactory;
+    private ThreadFactory threadFactory;
 
     /**
      * 被拒绝任务的处理器，不能为空

@@ -25,12 +25,12 @@ public class ThreadxConst {
     /**
      * 默认任务队列堆积长度
      */
-    private static final int                       DEFAULT_QUEUE_SIZE = 100000;
+    private static final int DEFAULT_QUEUE_SIZE = 100000;
 
     static {
         IO_THREAD_POO_CONFIG_SUPPLIER = () -> {
             String format = "threadx-io-%d";
-            //线程工厂
+            // 线程工厂
             ThreadFactory factory = new ThreadFactory() {
                 AtomicInteger counter = new AtomicInteger(0);
 
@@ -44,13 +44,13 @@ public class ThreadxConst {
             long keepAliveTime = 3;
             TimeUnit unit = TimeUnit.MINUTES;
             BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(DEFAULT_QUEUE_SIZE);
-            return new ThreadPoolConfig(corePoolSize, maximumPoolSize, keepAliveTime, unit,
-                workQueue, factory, new ThreadPoolExecutor.AbortPolicy());
+            return new ThreadPoolConfig(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, factory,
+                new ThreadPoolExecutor.AbortPolicy());
         };
 
         CALC_THREAD_POO_CONFIG_SUPPLIER = () -> {
             String format = "threadx-calc-%d";
-            //线程工厂
+            // 线程工厂
             ThreadFactory factory = new ThreadFactory() {
                 AtomicInteger counter = new AtomicInteger(0);
 
@@ -65,8 +65,8 @@ public class ThreadxConst {
             long keepAliveTime = 3;
             TimeUnit unit = TimeUnit.MINUTES;
             BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(DEFAULT_QUEUE_SIZE);
-            return new ThreadPoolConfig(corePoolSize, maximumPoolSize, keepAliveTime, unit,
-                workQueue, factory, new ThreadPoolExecutor.AbortPolicy());
+            return new ThreadPoolConfig(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, factory,
+                new ThreadPoolExecutor.AbortPolicy());
         };
     }
 }

@@ -10,6 +10,7 @@ public interface ThreadLocalTask {
 
     /**
      * 获取实际要执行的任务
+     * 
      * @return 实际要执行的任务，{@link Runnable}或者{@link java.util.concurrent.Callable}的子类
      */
     Object getTask();

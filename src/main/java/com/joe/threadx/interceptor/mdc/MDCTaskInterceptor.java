@@ -12,9 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 基于{@link com.joe.threadx.interceptor.threadlocal.ThreadLocalTaskInterceptor ThreadLocalTaskInterceptor}做MDC内容
- * 跨线程传递，要想启用该内容必须要使用{@link com.joe.threadx.interceptor.threadlocal.ThreadLocalTaskInterceptor ThreadLocalTaskInterceptor}
+ * 跨线程传递，要想启用该内容必须要使用{@link com.joe.threadx.interceptor.threadlocal.ThreadLocalTaskInterceptor
+ * ThreadLocalTaskInterceptor}
  *
- * 注意：该插件必须添加到{@link com.joe.threadx.interceptor.threadlocal.ThreadLocalTaskInterceptor ThreadLocalTaskInterceptor}插件之后，否则不会生效
+ * 注意：该插件必须添加到{@link com.joe.threadx.interceptor.threadlocal.ThreadLocalTaskInterceptor
+ * ThreadLocalTaskInterceptor}插件之后，否则不会生效
  * 
  * @author JoeKerouac
  * @version 2019年09月17日 16:34
@@ -39,7 +41,7 @@ public class MDCTaskInterceptor implements TaskInterceptor {
         // 防御性校验，防止其他拦截器修改
         if (obj instanceof Map) {
             @SuppressWarnings("unchecked")
-            Map<String, String> mdcContext = (Map<String, String>) obj;
+            Map<String, String> mdcContext = (Map<String, String>)obj;
             mdcContext.forEach(this::putMdc);
         } else if (obj != null) {
             log.warn("当前线程上下文的[MDC_CONTEXT_KEY]数据被修改，MDC拦截器无法生效");
@@ -49,6 +51,7 @@ public class MDCTaskInterceptor implements TaskInterceptor {
 
     /**
      * 获取当前MDC实现class
+     * 
      * @return 默认使用当前线程上下文的ClassLoader加载
      */
     private Class<?> getMdcClass() {
@@ -66,6 +69,7 @@ public class MDCTaskInterceptor implements TaskInterceptor {
 
     /**
      * 获取MDC的ContextMap
+     * 
      * @return MDC的ContextMap
      */
     @SuppressWarnings("unchecked")
@@ -74,7 +78,7 @@ public class MDCTaskInterceptor implements TaskInterceptor {
         Class<?> mdcClass = getMdcClass();
         try {
             Method getCopyOfContextMapMethod = mdcClass.getDeclaredMethod("getCopyOfContextMap");
-            return (Map<String, String>) getCopyOfContextMapMethod.invoke(mdcClass);
+            return (Map<String, String>)getCopyOfContextMapMethod.invoke(mdcClass);
         } catch (Exception e) {
             return MDC.getCopyOfContextMap();
         }
@@ -82,8 +86,11 @@ public class MDCTaskInterceptor implements TaskInterceptor {
 
     /**
      * 往MDC中放置内容
-     * @param key key
-     * @param value value
+     * 
+     * @param key
+     *            key
+     * @param value
+     *            value
      */
     public void putMdc(String key, String value) {
         Class<?> mdcClass = getMdcClass();

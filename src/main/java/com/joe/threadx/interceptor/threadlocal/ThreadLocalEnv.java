@@ -31,6 +31,7 @@ public class ThreadLocalEnv {
 
     /**
      * 获取当前线程上下文所有环境配置
+     * 
      * @return 当前线程上下文所有环境配置，可能为null
      */
     public static Map<String, Object> getAll() {
@@ -39,7 +40,9 @@ public class ThreadLocalEnv {
 
     /**
      * 将配置全部放入当前线程环境配置
-     * @param env 配置
+     * 
+     * @param env
+     *            配置
      */
     public static void putAll(Map<String, Object> env) {
         Objects.requireNonNull(env, "env must not be null");
@@ -48,28 +51,35 @@ public class ThreadLocalEnv {
 
     /**
      * 往当前线程环境放置一个配置
-     * @param key 配置的key，不能为空
-     * @param value 配置的value
-     * @param <T> 配置value的类型
+     * 
+     * @param key
+     *            配置的key，不能为空
+     * @param value
+     *            配置的value
+     * @param <T>
+     *            配置value的类型
      * @return 当前key对应的value，如果当前没有值则为null
      */
     @SuppressWarnings("unchecked")
     public static <T> T put(String key, T value) {
         ThreadxUtils.assertTrue(key != null && !key.isEmpty(), "key must not be empty");
-        return (T) getAndInit().put(key, value);
+        return (T)getAndInit().put(key, value);
     }
 
     /**
      * 获取当前线程环境中的配置
-     * @param key 要获取的配置的key，不能为空
-     * @param <T> 配置value类型
+     * 
+     * @param key
+     *            要获取的配置的key，不能为空
+     * @param <T>
+     *            配置value类型
      * @return 配置value
      */
     @SuppressWarnings("unchecked")
     public static <T> T get(String key) {
         ThreadxUtils.assertTrue(key != null && !key.isEmpty(), "key must not be empty");
         Map<String, Object> map = getAndInit();
-        return map == null ? null : (T) map.get(key);
+        return map == null ? null : (T)map.get(key);
     }
 
     /**

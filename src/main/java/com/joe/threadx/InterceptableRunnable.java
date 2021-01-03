@@ -22,17 +22,20 @@ public class InterceptableRunnable implements Runnable {
     /**
      * 实际要运行的任务
      */
-    private final Runnable        task;
+    private final Runnable task;
 
     /**
      * 用户提交的结果，详细见{@link InterceptableThreadPoolExecutor#submit(Runnable, Object)}
      */
-    private final Object          result;
+    private final Object result;
 
     /**
      * 构造器
-     * @param task 实际任务，不能为空
-     * @param interceptor 拦截器，不能为空
+     * 
+     * @param task
+     *            实际任务，不能为空
+     * @param interceptor
+     *            拦截器，不能为空
      */
     public InterceptableRunnable(Runnable task, TaskInterceptor interceptor, Object result) {
         Objects.requireNonNull(task, "task must not be null");
@@ -48,7 +51,7 @@ public class InterceptableRunnable implements Runnable {
         try {
             realTask = interceptor.before(task);
             interceptor.check(task, realTask);
-            ((Runnable) realTask).run();
+            ((Runnable)realTask).run();
             interceptor.after(realTask, result);
         } catch (Throwable e) {
             ThreadxUtils.processException(e, interceptor, realTask == null ? task : realTask);

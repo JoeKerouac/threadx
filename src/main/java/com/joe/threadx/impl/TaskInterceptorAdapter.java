@@ -25,7 +25,8 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
     /**
      * 构造器
      *
-     * @param interceptors 实现会对该队列进行遍历，请保证该List是线程安全的或者保证不会并发
+     * @param interceptors
+     *            实现会对该队列进行遍历，请保证该List是线程安全的或者保证不会并发
      */
     public TaskInterceptorAdapter(List<TaskInterceptor> interceptors) {
         Objects.requireNonNull(interceptors, "beforeInterceptors must not be null");
@@ -45,8 +46,10 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
     /**
      * 执行函数，将任务进行转换
      *
-     * @param task     任务
-     * @param function 转换函数，提供TaskInterceptor和任务，将任务转换为新的任务
+     * @param task
+     *            任务
+     * @param function
+     *            转换函数，提供TaskInterceptor和任务，将任务转换为新的任务
      * @return 结果
      */
     private Object invoke(Object task, BiFunction<TaskInterceptor, Object, Object> function) {
@@ -76,7 +79,7 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
         });
         Throwable result = reference.get();
         if (result instanceof RuntimeException) {
-            return (RuntimeException) result;
+            return (RuntimeException)result;
         } else {
             return new UncaughtException(result);
         }
@@ -89,7 +92,9 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
 
     /**
      * 前置执行
-     * @param consumer 执行器
+     * 
+     * @param consumer
+     *            执行器
      */
     private void beforeInterceptor(Consumer<TaskInterceptor> consumer) {
         this.interceptors.forEach(consumer);
@@ -97,7 +102,9 @@ public class TaskInterceptorAdapter implements TaskInterceptor {
 
     /**
      * 后置执行
-     * @param consumer 执行器
+     * 
+     * @param consumer
+     *            执行器
      */
     private void afterInterceptor(Consumer<TaskInterceptor> consumer) {
         for (int i = (this.interceptors.size() - 1); i >= 0; i--) {

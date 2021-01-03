@@ -22,12 +22,15 @@ public class InterceptableCallable<T> implements Callable<T> {
     /**
      * 实际要运行的任务
      */
-    private Callable<T>     task;
+    private Callable<T> task;
 
     /**
      * 构造器
-     * @param task 实际任务，不能为空
-     * @param interceptor 拦截器，不能为空
+     * 
+     * @param task
+     *            实际任务，不能为空
+     * @param interceptor
+     *            拦截器，不能为空
      */
     public InterceptableCallable(Callable<T> task, TaskInterceptor interceptor) {
         Objects.requireNonNull(task, "task must not be null");
@@ -43,7 +46,7 @@ public class InterceptableCallable<T> implements Callable<T> {
         try {
             realTask = interceptor.before(task);
             interceptor.check(task, realTask);
-            T result = ((Callable<T>) realTask).call();
+            T result = ((Callable<T>)realTask).call();
             interceptor.after(realTask, result);
             return result;
         } catch (Throwable e) {

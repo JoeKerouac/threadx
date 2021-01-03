@@ -24,8 +24,7 @@ public class ThreadxException extends RuntimeException {
         super(cause);
     }
 
-    protected ThreadxException(String message, Throwable cause, boolean enableSuppression,
-                               boolean writableStackTrace) {
+    protected ThreadxException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

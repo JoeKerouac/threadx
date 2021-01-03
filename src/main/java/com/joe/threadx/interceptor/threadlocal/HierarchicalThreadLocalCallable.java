@@ -5,13 +5,12 @@ import java.util.concurrent.Callable;
 /**
  * 可以继承父线程环境配置的任务
  * 
- * @see HierarchicalThreadLocalRunnable 
+ * @see HierarchicalThreadLocalRunnable
  * 
  * @author JoeKerouac
  * @version 2019年08月22日 11:16
  */
-class HierarchicalThreadLocalCallable<V> extends HierarchicalThreadLocalTask
-                                     implements ThreadLocalTask, Callable<V> {
+class HierarchicalThreadLocalCallable<V> extends HierarchicalThreadLocalTask implements ThreadLocalTask, Callable<V> {
 
     private Callable<V> task;
 

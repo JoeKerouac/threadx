@@ -17,7 +17,7 @@ import com.joe.threadx.BaseTest;
  */
 public class ThreadLocalTaskInterceptorTest extends BaseTest {
 
-    private static final String KEY   = "test-key";
+    private static final String KEY = "test-key";
 
     private static final String VALUE = "test-value";
 

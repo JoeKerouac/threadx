@@ -18,7 +18,7 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
     /**
      * 业务线程池
      */
-    private final ThreadPoolExecutor              executor;
+    private final ThreadPoolExecutor executor;
 
     /**
      * 拦截器队列
@@ -28,12 +28,12 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
     /**
      * 拦截器代理
      */
-    private final TaskInterceptorAdapter          interceptorAdapter;
+    private final TaskInterceptorAdapter interceptorAdapter;
 
     public InterceptableThreadPoolExecutorImpl(ThreadPoolConfig config) {
-        this.executor = new ThreadPoolExecutor(config.getCorePoolSize(),
-            config.getMaximumPoolSize(), config.getKeepAliveTime(), config.getUnit(),
-            config.getWorkQueue(), config.getThreadFactory(), config.getHandler());
+        this.executor =
+            new ThreadPoolExecutor(config.getCorePoolSize(), config.getMaximumPoolSize(), config.getKeepAliveTime(),
+                config.getUnit(), config.getWorkQueue(), config.getThreadFactory(), config.getHandler());
         this.interceptors = new CopyOnWriteArrayList<>();
         this.interceptorAdapter = new TaskInterceptorAdapter(interceptors);
     }
@@ -118,21 +118,19 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
     }
 
     @Override
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout,
-                                         TimeUnit unit) throws InterruptedException {
+    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+        throws InterruptedException {
         return executor.invokeAll(wrap(beforeAccept(tasks)), timeout, unit);
     }
 
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException,
-                                                                    ExecutionException {
+    public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
         return executor.invokeAny(wrap(beforeAccept(tasks)));
     }
 
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout,
-                           TimeUnit unit) throws InterruptedException, ExecutionException,
-                                          TimeoutException {
+    public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+        throws InterruptedException, ExecutionException, TimeoutException {
         return executor.invokeAny(wrap(beforeAccept(tasks)), timeout, unit);
     }
 
@@ -143,14 +141,17 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
 
     /**
      * 包装任务，将其包装为InterceptableRunnable类型
-     * @param task 任务
-     * @param result 结果
+     * 
+     * @param task
+     *            任务
+     * @param result
+     *            结果
      * @return 包装后的InterceptableRunnable
      */
     private InterceptableRunnable wrap(Runnable task, Object result) {
         // 如果不是InterceptableRunnable类型那么更改为该类型
         if (task instanceof InterceptableRunnable) {
-            return (InterceptableRunnable) task;
+            return (InterceptableRunnable)task;
         } else {
             return new InterceptableRunnable(task, interceptorAdapter, result);
         }
@@ -158,13 +159,15 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
 
     /**
      * 包装任务，将其包装为InterceptableRunnable类型
-     * @param command 任务
+     * 
+     * @param command
+     *            任务
      * @return 包装后的InterceptableRunnable
      */
     private <T> InterceptableCallable<T> wrap(Callable<T> command) {
         // 如果不是InterceptableRunnable类型那么更改为该类型
         if (command instanceof InterceptableCallable) {
-            return (InterceptableCallable<T>) command;
+            return (InterceptableCallable<T>)command;
         } else {
             return new InterceptableCallable<>(command, interceptorAdapter);
         }
@@ -172,7 +175,9 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
 
     /**
      * 包装任务，将其包装为InterceptableRunnable类型
-     * @param tasks 任务列表
+     * 
+     * @param tasks
+     *            任务列表
      * @return 包装后的InterceptableRunnable
      */
     private <T> Collection<InterceptableCallable<T>> wrap(Collection<? extends Callable<T>> tasks) {
@@ -181,7 +186,9 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
 
     /**
      * 任务入池前拦截
-     * @param tasks 任务列表
+     * 
+     * @param tasks
+     *            任务列表
      * @return 要执行的任务列表
      */
     private <T> Collection<Callable<T>> beforeAccept(Collection<? extends Callable<T>> tasks) {
@@ -190,24 +197,28 @@ public class InterceptableThreadPoolExecutorImpl implements InterceptableThreadP
 
     /**
      * 任务入池前拦截
-     * @param task 任务
+     * 
+     * @param task
+     *            任务
      * @return 要执行的任务
      */
     private Runnable beforeAccept(Runnable task) {
         Object result = interceptorAdapter.beforeAccept(task);
         interceptorAdapter.check(task, result);
-        return (Runnable) result;
+        return (Runnable)result;
     }
 
     /**
      * 任务入池前拦截
-     * @param task 任务
+     * 
+     * @param task
+     *            任务
      * @return 要执行的任务
      */
     @SuppressWarnings("unchecked")
     private <T> Callable<T> beforeAccept(Callable<T> task) {
         Object result = interceptorAdapter.beforeAccept(task);
         interceptorAdapter.check(task, result);
-        return (Callable<T>) result;
+        return (Callable<T>)result;
     }
 }

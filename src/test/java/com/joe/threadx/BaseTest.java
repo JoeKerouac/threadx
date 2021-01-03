@@ -19,11 +19,13 @@ public abstract class BaseTest {
 
     /**
      * 执行指定操作，每次执行都会为该操作提供一个InterceptableThreadPoolExecutor
-     * @param consumer 待执行的操作
+     * 
+     * @param consumer
+     *            待执行的操作
      */
     protected void run(Consumer<InterceptableThreadPoolExecutor> consumer) {
-        InterceptableThreadPoolExecutor executor = InterceptableThreadPoolExecutorFactory
-            .build(InterceptableThreadPoolExecutorFactory.PoolType.Calc);
+        InterceptableThreadPoolExecutor executor =
+            InterceptableThreadPoolExecutorFactory.build(InterceptableThreadPoolExecutorFactory.PoolType.Calc);
         consumer.accept(executor);
         if (!executor.isShutdown()) {
             executor.shutdown();

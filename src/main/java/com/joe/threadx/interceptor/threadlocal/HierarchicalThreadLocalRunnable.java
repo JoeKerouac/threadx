@@ -8,8 +8,7 @@ package com.joe.threadx.interceptor.threadlocal;
  * @author JoeKerouac
  * @version 2019年08月22日 11:14
  */
-class HierarchicalThreadLocalRunnable extends HierarchicalThreadLocalTask
-                                      implements ThreadLocalTask, Runnable {
+class HierarchicalThreadLocalRunnable extends HierarchicalThreadLocalTask implements ThreadLocalTask, Runnable {
 
     private Runnable task;
 

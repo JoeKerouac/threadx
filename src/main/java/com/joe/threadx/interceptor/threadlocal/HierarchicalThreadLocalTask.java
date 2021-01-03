@@ -16,7 +16,7 @@ abstract class HierarchicalThreadLocalTask implements ThreadLocalTask {
     /**
      * 实际任务
      */
-    private Object              task;
+    private Object task;
 
     HierarchicalThreadLocalTask(Object task) {
         Objects.requireNonNull(task, "执行任务不能为空");
