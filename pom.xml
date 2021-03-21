@@ -1,18 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github.JoeKerouac</groupId>
     <artifactId>threadx</artifactId>
-    <version>1.0.000</version>
+    <version>1.0.0</version>
     <name>threadx</name>
     <packaging>jar</packaging>
     <description>多线程扩展</description>
     <url>https://github.com/JoeKerouac/threadx</url>
-
-    <parent>
-        <groupId>com.github.JoeKerouac</groupId>
-        <artifactId>java-parent</artifactId>
-        <version>1.1.0</version>
-    </parent>
 
     <licenses>
         <license>
@@ -34,19 +29,38 @@
         </developer>
     </developers>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+        <java.version>1.8</java.version>
+    </properties>
+
     <dependencies>
+        <!--快速生成get、set方法-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
+            <scope>provided</scope>
         </dependency>
+        <!-- 日志框架 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>1.7.29</version>
         </dependency>
         <!-- MDC测试使用 -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+            <scope>test</scope>
+        </dependency>
+        <!--test-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -56,6 +70,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -79,13 +94,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.github.JoeKerouac</groupId>
-                        <artifactId>java-parent</artifactId>
-                        <version>1.1.0</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
